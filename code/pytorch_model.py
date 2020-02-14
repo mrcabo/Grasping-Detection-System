@@ -47,6 +47,18 @@ class ResNet50(nn.Module):
         return x
 
 
+class MobileNet(nn.Module):
+
+    def __init__(self, pre_trained=True):
+        super().__init__()
+        mobile_net = torchvision.models.mobilenet_v2(pretrained=pre_trained)
+        mobile_net.classifier[1] = nn.Linear(1280, 5)  # reshape to fit correct number of classes
+        self.add_module('mobileNet', mobile_net)
+
+    def forward(self, x):
+        x = self.mobileNet(x)
+        return x
+
 class OurResnet:
     def __init__(self, dest_path, train_loader, valid_loader, test_loader, pre_trained=True, **kwargs):
         self.dest_path = dest_path
