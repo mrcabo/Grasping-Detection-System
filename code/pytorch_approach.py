@@ -12,6 +12,7 @@ from torchvision import transforms
 from cornell_dataset import CornellDataset, ToTensor, Normalize, de_normalize
 from util import plot_image, parse_arguments
 from pytorch_model import OurResnet
+from cnn import CNN
 
 
 def test_data_loader(loader):
@@ -69,7 +70,7 @@ if __name__ == '__main__':
     batch_size, epochs, num_workers, test_split, valid_split, test_and_plot, pre_trained = parse_arguments()
     # ROOT_PATH = Path('/home/diego/Documents/RUG/CognitiveRobotics/Grasping_Detection_System')
     # PATH_TO_DATA = ROOT_PATH / 'debug_dataset'
-    ROOT_PATH = Path('/home/s3736555/Grasping_Detection_System')
+    ROOT_PATH = Path('/home/anpenta/Desktop/Grasping_Detection_System')
     PATH_TO_DATA = ROOT_PATH / 'dataset'
     PATH_TO_POS_LABELS = ROOT_PATH / 'labels/pos_labels.csv'
     PATH_TO_OUTPUTS = ROOT_PATH / 'output'
@@ -116,11 +117,10 @@ if __name__ == '__main__':
     # test_data_loader(train_loader)
 
     # Create model
-    model = OurResnet(dest_path=PATH_TO_OUTPUTS,
+    model = CNN(dest_path=PATH_TO_OUTPUTS,
                       train_loader=train_loader,
                       valid_loader=valid_loader,
-                      test_loader=test_loader,
-                      pre_trained=PRE_TRAINED)
+                      test_loader=test_loader)
     # print(model.model)
 
     if not test_and_plot == "":
