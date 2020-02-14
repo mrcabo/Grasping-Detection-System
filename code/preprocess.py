@@ -230,4 +230,4 @@ def split_train_test_data(images_df, rectangles_df):
 if __name__ == "__main__":
     # test_without_changes()
     # test()
-    save_labels("../dataset", "../labels")
+    save_labels("./dataset", "./labels")

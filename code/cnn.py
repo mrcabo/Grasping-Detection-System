@@ -13,8 +13,8 @@ class Net(nn.Module):
     super(Net, self).__init__()
     self.conv1 = nn.Conv2d(3, 32, 3)
     self.conv2 = nn.Conv2d(32, 64, 3)
-    self.fc1 = nn.Linear(256, 1024)
-    self.fc2 = nn.Linear(1024, 5)
+    self.fc1 = nn.Linear(232960, 256)
+    self.fc2 = nn.Linear(256, 5)
 
   def forward(self, x):
     x = nn.functional.max_pool2d(nn.functional.relu(self.conv1(x)), (3, 3))
