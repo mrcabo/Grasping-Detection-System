@@ -52,11 +52,15 @@ class MobileNet(nn.Module):
     def __init__(self, pre_trained=True):
         super().__init__()
         mobile_net = torchvision.models.mobilenet_v2(pretrained=pre_trained)
-        mobile_net.classifier[1] = nn.Linear(1280, 5)  # reshape to fit correct number of classes
+        mobile_net.classifier[1] = nn.Linear(1280, 320)  # reshape to fit correct number of classes
         self.add_module('mobileNet', mobile_net)
+
+        fc1 = nn.Linear(320, 5)
+        self.add_module('fc1', fc1)
 
     def forward(self, x):
         x = self.mobileNet(x)
+        x = nn.functional.relu(self.fc1(x))
         return x
 
 class OurResnet:
