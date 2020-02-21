@@ -64,6 +64,25 @@ class MobileNet(nn.Module):
         return x
 
 
+class SqueezeNet(nn.Module):
+
+    def __init__(self, pre_trained=True):
+        super.__init__()
+        squeeze_net = torchvision.models.squeezenet1_1(pretrained=pre_trained)
+        self.add_module('squeezenet', squeeze_net)
+
+        fc1 = nn.Linear(512, 128)
+        self.add_module('fc1', fc1)
+        fc_reg = nn.Linear(128, 5)
+        self.add_module('fc_reg', fc_reg)
+
+    def forward(self, x):
+        x = self.squeezenet(x)
+        x = nn.functional.relu(self.fc1(x))
+        x = torch.sigmoid(self.fc_reg(x))
+        return x
+
+
 class OurNet:
     def __init__(self, dest_path, train_loader, valid_loader, test_loader, pre_trained=True, **kwargs):
         self.dest_path = dest_path
