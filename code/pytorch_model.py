@@ -67,13 +67,13 @@ class MobileNet(nn.Module):
 class SqueezeNet(nn.Module):
 
     def __init__(self, pre_trained=True):
-        super.__init__()
+        super().__init__()
         squeeze_net = torchvision.models.squeezenet1_1(pretrained=pre_trained)
         self.add_module('squeezenet', squeeze_net)
 
-        fc1 = nn.Linear(512, 128)
+        fc1 = nn.Linear(1000, 256)
         self.add_module('fc1', fc1)
-        fc_reg = nn.Linear(128, 5)
+        fc_reg = nn.Linear(256, 5)
         self.add_module('fc_reg', fc_reg)
 
     def forward(self, x):
@@ -88,7 +88,7 @@ class OurNet:
         self.dest_path = dest_path
         self.train_loader, self.valid_loader, self.test_loader = train_loader, valid_loader, test_loader
         # self.model = ResNet18(pre_trained=pre_trained)
-        self.model = ResNet50(pre_trained=pre_trained)
+        self.model = SqueezeNet(pre_trained=pre_trained)
         self.loss_function = nn.MSELoss()
         self.optimizer = optim.Adam(self.model.parameters())
         # See if we use CPU or GPU
