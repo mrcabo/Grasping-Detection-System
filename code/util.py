@@ -53,6 +53,9 @@ def calculate_similarity(predicted, labels, device):
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Grasping detection system')
+    parser.add_argument('--network', type=str, default="resnet50",
+                        help='The network architecture that will be used. It can be: squeezenet1_1, mobilenet_v2, '
+                             'resnet18, resnet50 (default: resnet50)')
     parser.add_argument('--batch_size', type=int, default=64,
                         help='input batch size for training (default: 64)')
 
@@ -75,5 +78,5 @@ def parse_arguments():
                         help='The path to the saved model we want test network and plot rectangles on images ('
                              'default: "")')
     args = parser.parse_args()
-    return (args.batch_size, args.epochs, args.num_workers, args.test_split,
+    return (args.network, args.batch_size, args.epochs, args.num_workers, args.test_split,
             args.valid_split, args.test_and_plot, args.pre_trained)

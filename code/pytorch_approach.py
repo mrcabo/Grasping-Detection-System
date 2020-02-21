@@ -28,14 +28,14 @@ def test_data_loader(loader):
             break
 
 
-def train_network(epochs, n_train_batches, n_val_batches, n_test_batches):
+def train_network(network_name, epochs, n_train_batches, n_val_batches, n_test_batches):
     # Training
     metrics = []
     best_val_accuracy = 0
     current_test_accuracy = 0
 
     appendix_datetime = datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm")
-    filename = 'our_resnet50_pretrained_' + appendix_datetime + '.pt'
+    filename = network_name + '_pretrained_' + appendix_datetime + '.pt'
     saved_model = PATH_TO_OUTPUTS / filename
     filename = 'metrics_' + appendix_datetime
     saved_metrics = PATH_TO_OUTPUTS / filename
@@ -66,7 +66,7 @@ def train_network(epochs, n_train_batches, n_val_batches, n_test_batches):
 
 if __name__ == '__main__':
 
-    batch_size, epochs, num_workers, test_split, valid_split, test_and_plot, pre_trained = parse_arguments()
+    network_name, batch_size, epochs, num_workers, test_split, valid_split, test_and_plot, pre_trained = parse_arguments()
     # ROOT_PATH = Path('/home/diego/Documents/RUG/CognitiveRobotics/Grasping_Detection_System')
     # PATH_TO_DATA = ROOT_PATH / 'debug_dataset'
     ROOT_PATH = Path('/home/s3736555/Grasping_Detection_System')
@@ -116,11 +116,8 @@ if __name__ == '__main__':
     # test_data_loader(train_loader)
 
     # Create model
-    model = OurNet(dest_path=PATH_TO_OUTPUTS,
-                   train_loader=train_loader,
-                   valid_loader=valid_loader,
-                   test_loader=test_loader,
-                   pre_trained=PRE_TRAINED)
+    model = OurNet(dest_path=PATH_TO_OUTPUTS, train_loader=train_loader, valid_loader=valid_loader,
+                   test_loader=test_loader, network_name=network_name, pre_trained=PRE_TRAINED)
     # print(model.model)
 
     if not test_and_plot == "":
@@ -142,6 +139,6 @@ if __name__ == '__main__':
         n_train_batches = len(train_loader)
         n_val_batches = len(valid_loader)
         n_test_batches = len(test_loader)
-        train_network(epochs, n_train_batches, n_val_batches, n_test_batches)
+        train_network(network_name, epochs, n_train_batches, n_val_batches, n_test_batches)
 
     print("Bye")

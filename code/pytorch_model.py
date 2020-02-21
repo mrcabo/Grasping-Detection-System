@@ -84,11 +84,20 @@ class SqueezeNet(nn.Module):
 
 
 class OurNet:
-    def __init__(self, dest_path, train_loader, valid_loader, test_loader, pre_trained=True, **kwargs):
+    def __init__(self, dest_path, train_loader, valid_loader, test_loader, network_name, pre_trained=True, **kwargs):
         self.dest_path = dest_path
         self.train_loader, self.valid_loader, self.test_loader = train_loader, valid_loader, test_loader
-        # self.model = ResNet18(pre_trained=pre_trained)
-        self.model = SqueezeNet(pre_trained=pre_trained)
+        if network_name == "squeezenet1_1":
+            self.model = SqueezeNet(pre_trained=pre_trained)
+        elif network_name == "mobilenet_v2":
+            self.model = MobileNet(pre_trained=pre_trained)
+        elif network_name == "resnet18":
+            self.model = ResNet18(pre_trained=pre_trained)
+        elif network_name == "resnet50":
+            self.model = ResNet50(pre_trained=pre_trained)
+        else:
+            raise NameError('{} is not a possible network'.format(network_name))
+
         self.loss_function = nn.MSELoss()
         self.optimizer = optim.Adam(self.model.parameters())
         # See if we use CPU or GPU
