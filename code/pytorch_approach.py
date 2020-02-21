@@ -11,7 +11,7 @@ from torchvision import transforms
 
 from cornell_dataset import CornellDataset, ToTensor, Normalize, de_normalize
 from util import plot_image, parse_arguments
-from pytorch_model import OurResnet
+from pytorch_model import OurNet
 
 
 def test_data_loader(loader):
@@ -116,11 +116,11 @@ if __name__ == '__main__':
     # test_data_loader(train_loader)
 
     # Create model
-    model = OurResnet(dest_path=PATH_TO_OUTPUTS,
-                      train_loader=train_loader,
-                      valid_loader=valid_loader,
-                      test_loader=test_loader,
-                      pre_trained=PRE_TRAINED)
+    model = OurNet(dest_path=PATH_TO_OUTPUTS,
+                   train_loader=train_loader,
+                   valid_loader=valid_loader,
+                   test_loader=test_loader,
+                   pre_trained=PRE_TRAINED)
     # print(model.model)
 
     if not test_and_plot == "":

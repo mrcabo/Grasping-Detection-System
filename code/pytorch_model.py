@@ -63,7 +63,8 @@ class MobileNet(nn.Module):
         x = nn.functional.relu(self.fc1(x))
         return x
 
-class OurResnet:
+
+class OurNet:
     def __init__(self, dest_path, train_loader, valid_loader, test_loader, pre_trained=True, **kwargs):
         self.dest_path = dest_path
         self.train_loader, self.valid_loader, self.test_loader = train_loader, valid_loader, test_loader
