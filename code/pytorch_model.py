@@ -141,24 +141,26 @@ class OurNet:
             param.requires_grad = False
 
         if self.network_name == "squeezenet1_1":
-            self.model.fc1.requires_grad = True
-            self.model.fc_reg.requires_grad = True
-            self.optimizer = optim.Adam([self.model.fc1.parameters(), self.model.fc_reg.parameters()])
+            self.model.fc1.requires_grad_(True)
+            self.model.fc_reg.requires_grad_(True)
+            self.optimizer = optim.Adam([{'params': self.model.fc1.parameters()},
+                                         {'params': self.model.fc_reg.parameters()}])
         elif self.network_name == "mobilenet_v2":
             pass
         elif (self.network_name == "resnet18") or (self.network_name == "resnet50"):
-            self.model.resnet.fc.requires_grad = True
-            self.model.fc1.requires_grad = True
-            self.model.fc_reg.requires_grad = True
-            self.optimizer = optim.Adam(self.model.parameters())
-            self.optimizer = optim.Adam([self.model.resnet.fc.parameters(), self.model.fc1.parameters(),
-                                         self.model.fc_reg.parameters()])
+            self.model.resnet.fc.requires_grad_(True)
+            self.model.fc1.requires_grad_(True)
+            self.model.fc_reg.requires_grad_(True)
+            # self.optimizer = optim.Adam(self.model.fc_reg.parameters())
+            self.optimizer = optim.Adam([{'params': self.model.resnet.fc.parameters()},
+                                         {'params': self.model.fc1.parameters()},
+                                         {'params': self.model.fc_reg.parameters()}])
         for epoch in range(1, epochs + 1):
             total_loss = self.train()
             print(f"Epoch {epoch}/{epochs}, loss: {total_loss}")
         # Allow the whole network to train
         for param in self.model.parameters():
-            param.requires_grad = False
+            param.requires_grad = True
         self.optimizer = optim.Adam(self.model.parameters())
 
     def evaluate(self, data_loader):
