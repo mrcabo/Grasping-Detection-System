@@ -97,6 +97,7 @@ class OurNet:
             self.model = ResNet50(pre_trained=pre_trained)
         else:
             raise NameError('{} is not a possible network'.format(network_name))
+        print(f"Model used: {network_name}")
 
         self.loss_function = nn.MSELoss()
         self.optimizer = optim.Adam(self.model.parameters())
