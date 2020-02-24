@@ -25,6 +25,7 @@ def to_four_points(rectangle):
 
 def plot_image(image, rectangle=None):
     """Show image with rectangle"""
+    plt.clf()
     plt.imshow(image)
     if rectangle is not None:
         rectangle = to_four_points(rectangle)
@@ -33,7 +34,7 @@ def plot_image(image, rectangle=None):
         plt.plot((p2[0], p3[0]), (p2[1], p3[1]), color='green')
         plt.plot((p3[0], p4[0]), (p3[1], p4[1]), color='gray')
         plt.plot((p4[0], p1[0]), (p4[1], p1[1]), color='green')
-    plt.pause(0.001)  # pause a bit so that plots are updated
+    plt.show()
 
 
 def calculate_similarity(predicted, labels, device):
