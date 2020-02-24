@@ -87,6 +87,7 @@ class OurNet:
     def __init__(self, dest_path, train_loader, valid_loader, test_loader, network_name, pre_trained=True, **kwargs):
         self.dest_path = dest_path
         self.train_loader, self.valid_loader, self.test_loader = train_loader, valid_loader, test_loader
+        self.pre_trained = pre_trained
         if network_name == "squeezenet1_1":
             self.model = SqueezeNet(pre_trained=pre_trained)
         elif network_name == "mobilenet_v2":

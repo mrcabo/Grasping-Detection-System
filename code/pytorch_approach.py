@@ -28,7 +28,7 @@ def test_data_loader(loader):
             break
 
 
-def train_network(network_name, epochs, n_train_batches, n_val_batches, n_test_batches):
+def train_network(network_name, model, epochs, n_train_batches, n_val_batches, n_test_batches):
     # Training
     metrics = []
     best_val_accuracy = 0
@@ -41,6 +41,28 @@ def train_network(network_name, epochs, n_train_batches, n_val_batches, n_test_b
     saved_metrics = PATH_TO_OUTPUTS / filename
 
     start_ts = time.time()
+
+    # Train the last layers only first
+    if model.pre_trained:
+        for param in model.model.parameters():
+            param.requires_grad = False
+
+        if network_name == "squeezenet1_1":
+            model.model.fc1.requires_grad = True
+            model.model.fc_reg.requires_grad = True
+        elif network_name == "mobilenet_v2":
+            pass
+        elif (network_name == "resnet18") or (network_name == "resnet50"):
+            model.model.fc.requires_grad = True
+            model.model.fc1.requires_grad = True
+            model.model.fc_reg.requires_grad = True
+
+        for epoch in range(1, 10):
+            total_loss = model.train()
+            print(f"Total loss during pre-training: {total_loss}")
+        for param in model.model.parameters():
+            param.requires_grad = True
+
     for epoch in range(1, epochs + 1):
         total_loss = model.train()
         val_losses, val_accuracies = model.validate()
@@ -140,6 +162,6 @@ if __name__ == '__main__':
         n_train_batches = len(train_loader)
         n_val_batches = len(valid_loader)
         n_test_batches = len(test_loader)
-        train_network(network_name, epochs, n_train_batches, n_val_batches, n_test_batches)
+        train_network(network_name, model, epochs, n_train_batches, n_val_batches, n_test_batches)
 
     print("Bye")
