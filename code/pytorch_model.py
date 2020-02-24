@@ -102,8 +102,9 @@ class OurNet:
         self.loss_function = nn.MSELoss()
         self.optimizer = optim.Adam(self.model.parameters())
         # See if we use CPU or GPU
-        # self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.device = torch.device("cpu")
+        # self.device = torch.device("cpu")
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        print(f"Using device: {self.device}")
         self.cuda_available = torch.cuda.is_available()
 
     def train(self):

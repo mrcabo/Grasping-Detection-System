@@ -122,8 +122,8 @@ if __name__ == '__main__':
 
     if not test_and_plot == "":
         path = Path(test_and_plot)
-        device = torch.device('cpu')  # This could be gpu if your computer has one :P
-        # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        # device = torch.device('cpu')  # This could be gpu if your computer has one :P
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         model.load_model(path, device=device)
         images, predictions = model.get_prediction(test_loader)
         for i, batch in enumerate(predictions):
