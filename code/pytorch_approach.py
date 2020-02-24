@@ -44,24 +44,8 @@ def train_network(network_name, model, epochs, n_train_batches, n_val_batches, n
 
     # Train the last layers only first
     if model.pre_trained:
-        for param in model.model.parameters():
-            param.requires_grad = False
-
-        if network_name == "squeezenet1_1":
-            model.model.fc1.requires_grad = True
-            model.model.fc_reg.requires_grad = True
-        elif network_name == "mobilenet_v2":
-            pass
-        elif (network_name == "resnet18") or (network_name == "resnet50"):
-            model.model.fc.requires_grad = True
-            model.model.fc1.requires_grad = True
-            model.model.fc_reg.requires_grad = True
-
-        for epoch in range(1, 10):
-            total_loss = model.train()
-            print(f"Total loss during pre-training: {total_loss}")
-        for param in model.model.parameters():
-            param.requires_grad = True
+        print("Pre-training..")
+        model.pre_train(10)
 
     for epoch in range(1, epochs + 1):
         total_loss = model.train()

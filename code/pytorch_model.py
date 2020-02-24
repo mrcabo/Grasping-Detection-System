@@ -88,6 +88,7 @@ class OurNet:
         self.dest_path = dest_path
         self.train_loader, self.valid_loader, self.test_loader = train_loader, valid_loader, test_loader
         self.pre_trained = pre_trained
+        self.network_name = network_name
         if network_name == "squeezenet1_1":
             self.model = SqueezeNet(pre_trained=pre_trained)
         elif network_name == "mobilenet_v2":
@@ -131,6 +132,34 @@ class OurNet:
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
         return total_loss
+
+    def pre_train(self, epochs):
+        """
+        Trains ONLY the last layers of the network. Useful when using transfer learning
+        """
+        for param in self.model.parameters():
+            param.requires_grad = False
+
+        if self.network_name == "squeezenet1_1":
+            self.model.fc1.requires_grad = True
+            self.model.fc_reg.requires_grad = True
+            self.optimizer = optim.Adam([self.model.fc1.parameters(), self.model.fc_reg.parameters()])
+        elif self.network_name == "mobilenet_v2":
+            pass
+        elif (self.network_name == "resnet18") or (self.network_name == "resnet50"):
+            self.model.resnet.fc.requires_grad = True
+            self.model.fc1.requires_grad = True
+            self.model.fc_reg.requires_grad = True
+            self.optimizer = optim.Adam(self.model.parameters())
+            self.optimizer = optim.Adam([self.model.resnet.fc.parameters(), self.model.fc1.parameters(),
+                                         self.model.fc_reg.parameters()])
+        for epoch in range(1, epochs + 1):
+            total_loss = self.train()
+            print(f"Epoch {epoch}/{epochs}, loss: {total_loss}")
+        # Allow the whole network to train
+        for param in self.model.parameters():
+            param.requires_grad = False
+        self.optimizer = optim.Adam(self.model.parameters())
 
     def evaluate(self, data_loader):
         val_losses = []
