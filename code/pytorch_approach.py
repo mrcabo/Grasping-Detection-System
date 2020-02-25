@@ -28,16 +28,16 @@ def test_data_loader(loader):
             break
 
 
-def train_network(network_name, epochs, n_train_batches, n_val_batches, n_test_batches):
+def train_network(trial_name, epochs, n_train_batches, n_val_batches, n_test_batches):
     # Training
     metrics = []
     best_val_accuracy = 0
     current_test_accuracy = 0
 
     appendix_datetime = datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm")
-    filename = network_name + '_pretrained_' + appendix_datetime + '.pt'
+    filename = trial_name + appendix_datetime + '.pt'
     saved_model = PATH_TO_OUTPUTS / filename
-    filename = 'metrics_' + appendix_datetime
+    filename = 'metrics_' + trial_name + appendix_datetime
     saved_metrics = PATH_TO_OUTPUTS / filename
 
     start_ts = time.time()
@@ -141,6 +141,7 @@ if __name__ == '__main__':
         n_train_batches = len(train_loader)
         n_val_batches = len(valid_loader)
         n_test_batches = len(test_loader)
+        trial_name = network_name + ("_pretrained_" if PRE_TRAINED else "")
         train_network(network_name, epochs, n_train_batches, n_val_batches, n_test_batches)
 
     print("Bye")
