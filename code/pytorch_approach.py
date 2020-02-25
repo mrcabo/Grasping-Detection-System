@@ -87,6 +87,7 @@ if __name__ == '__main__':
 
     transformed_dataset = CornellDataset(PATH_TO_POS_LABELS.as_posix(), PATH_TO_DATA.as_posix(),
                                          transform=transforms.Compose([
+                                             transforms.Resize(224),
                                              ToTensor(),
                                              Normalize(PRE_TRAINED)
                                          ]))
