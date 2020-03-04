@@ -5,6 +5,9 @@ import argparse
 from pathlib import Path
 import numpy as np
 from cornell_dataset import CornellDataset, ToTensor, Normalize, de_normalize
+from prediction_model import PredictionNet
+import torch
+from util import plot_image
 
 
 def parse_arguments():
@@ -37,10 +40,26 @@ if __name__ == '__main__':
     # TODO
 
     # Create model
-    # TODO
+    # TODO: NETWORK_NAME, PRE_TRAINED and MODEL_PATH should be added to parse_arguments()
+    NETWORK_NAME = "resnet18"
+    PRE_TRAINED = True
+    MODEL_PATH = "./results/resnet18_pretrained/our_resnet18_2019-11-10_18h53m.pt"
+    model = PredictionNet(dest_path=OUTPUT_PATH, orthogonal_loader=orthogonal_loader, network_name=NETWORK_NAME,
+                          pre_trained=PRE_TRAINED)
+    path = Path(MODEL_PATH)
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model.load_model(path, device=device)
     # print(model.model)
 
     # For each image, plot the predicted rectangle and save it to OUTPUT_PATH
     # TODO
+    images, predictions = model.get_prediction(orthogonal_loader)
+    for i, batch in enumerate(predictions):
+        for j, rect in enumerate(batch):
+            image = images[i][j]
+            image = de_normalize(image, PRE_TRAINED)
+            image = image.numpy().transpose((1, 2, 0))
+            # print(f"Predicted rectangles {rect}")
+            plot_image(image, rect)
 
     print("End of testing orthogonal projection images. Byeeee :D!")
