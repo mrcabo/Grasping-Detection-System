@@ -3,9 +3,12 @@ import time
 import datetime
 import argparse
 from pathlib import Path
+from torchvision import transforms
 import numpy as np
 from cornell_dataset import CornellDataset, ToTensor, Normalize, de_normalize
-
+from orthographic_dataset import OrthographicDataset, ToTensor
+from torch.utils.data import DataLoader
+from torch.utils.data.sampler import SubsetRandomSampler
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Grasping detection system')
@@ -34,7 +37,17 @@ if __name__ == '__main__':
         Path.mkdir(OUTPUT_PATH, parents=True)
 
     # Orth images data loader
-    # TODO
+    transformed_dataset = OrthographicDataset(SRC_PATH.as_posix(),
+                                              transform=transforms.Compose([
+                                                  transforms.Resize(224),
+                                                  ToTensor()]))
+
+    dataset_size = len(transformed_dataset)
+    indices = list(range(dataset_size))
+    test_sampler = SubsetRandomSampler(indices)
+
+    test_loader = DataLoader(transformed_dataset, batch_size=32,
+                             sampler=test_sampler, num_workers=4)
 
     # Create model
     # TODO
